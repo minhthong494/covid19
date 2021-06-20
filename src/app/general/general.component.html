@@ -1,0 +1,153 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>Worldwide</h1>
+      <div class="row">
+        <div class="col-2">Confirmed</div>
+        <div class="col-2">Recovered</div>
+        <div class="col-2">Deaths</div>
+        <div class="col-6"></div>
+        <div class="col-2 h3">{{ stat.confirmed }}</div>
+        <div class="col-2 h3">{{ stat.recovered }}</div>
+        <div class="col-2 h3">{{ stat.deaths }}</div>
+        <div class="col-3">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm"
+                >Country</span
+              >
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              aria-label="Small"
+              aria-describedby="inputGroup-sizing-sm"
+              [(ngModel)]="searchCountry"
+              (keypress)="onSearch($event)"
+            />
+          </div>
+        </div>
+        <div class="col-3">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            (change)="onFilterDate($event)"
+            [(ngModel)]="selectedDate"
+          >
+            <option *ngFor="let date of dates" [value]="date">
+              {{ date }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Country</th>
+            <th scope="col">Confirmed</th>
+            <th scope="col">Recovered</th>
+            <th scope="col">Deaths</th>
+            <th scope="col">Mortality rate</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="searchCountry == '' || !isHistory">
+          <tr *ngFor="let name of showCountries; let i = index">
+            <th scope="row">{{ i }}</th>
+            <th>{{ name }}</th>
+            <td>{{ data.live[name]["All"]["confirmed"] }}</td>
+            <td>{{ data.live[name]["All"]["recovered"] }}</td>
+            <td>{{ data.live[name]["All"]["deaths"] }}</td>
+            <td>
+              {{
+                data.live[name]["All"]["deaths"] /
+                  data.live[name]["All"]["confirmed"] | percent: "1.2-2"
+              }}
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="searchCountry != '' && isHistory">
+          <tr *ngFor="let name of showCountries; let i = index">
+            <th scope="row">{{ i }}</th>
+            <th>{{ name }}</th>
+            <td>
+              {{
+                data.historyConfirmed
+                  ? data.historyConfirmed[name]["All"]["dates"][selectedDate]
+                  : "null"
+              }}
+            </td>
+            <td>-</td>
+            <td>
+              {{
+                data.historyDeaths
+                  ? data.historyDeaths[name]["All"]["dates"][selectedDate]
+                  : "null"
+              }}
+            </td>
+            <td>-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- <div class="col">
+      <h1>Vietnam</h1>
+    </div> -->
+  </div>
+</div>
+
+<!-- <ng-template #livedata>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Country</th>
+        <th scope="col">Confirmed</th>
+        <th scope="col">Recovered</th>
+        <th scope="col">Deaths</th>
+        <th scope="col">Mortality rate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let name of showCountries; let i = index">
+        <th scope="row">{{ i }}</th>
+        <th>{{ name }}</th>
+        <td>{{ data.live[name]["All"]["confirmed"] }}</td>
+        <td>{{ data.live[name]["All"]["recovered"] }}</td>
+        <td>{{ data.live[name]["All"]["deaths"] }}</td>
+        <td>
+          {{
+            data.live[name]["All"]["deaths"] /
+              data.live[name]["All"]["confirmed"] | percent: "1.2-2"
+          }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
+
+<ng-template #historydata>
+  <h1>history</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Country</th>
+        <th scope="col">Confirmed</th>
+        <th scope="col">Recovered</th>
+        <th scope="col">Deaths</th>
+        <th scope="col">Mortality rate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let name of showCountries; let i = index">
+        <th scope="row">{{ i }}</th>
+        <th>{{ name }}</th>
+        <td>{{ data.historyConfirmed[name]["All"]["dates"][selectedDate] }}</td>
+        <td>-</td>
+        <td>{{ data.historyRecovered[name]["All"]["dates"][selectedDate] }}</td>
+        <td>-</td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template> -->
